@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CRUD BackboneJS</title>
+
+        <title>Home </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+   </head>
+<body>
+
+
+<div class="container">
+    <div class="page-header">
+        <h1>BackBoneJS Student Application</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body" id="primary-content">
+            <!-- this is content -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Separation-->
+<!-- Add, Edit Template -->
+<script type="text/jst" id="formTemplate">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger fade in" style="display:none;"></div>
+                <form>
+
+                    <div class="form-group">
+                        <label>Roll_No:</label>
+                        <input type="text" class="form-control" name="Roll_No" value="<%= Roll_No %>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" class="form-control" name="Name" value="<%= Name %>" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="text" class="form-control" name="Email" value="<%= Email %>" />
+                    </div>
+
+                    <button class="save btn btn-large btn-info">Save</button>
+                    <a href="#student/index" class="btn btn-large btn-default">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </script>
+
+<!-- Separation-->
+<!--  StudentCourseTemplate view Add course against the students -->
+<script type="text/jst" id="StudentCourseTemplate">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger fade in" style="display:none;"></div>
+                <form>
+
+                    <div class="form-group">
+                        <label>Std_CourseId:</label>
+                        <input type="text" class="form-control" name="Std_CourseId" value="<%= Std_CourseId %>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Roll_No:</label>
+                        <input type="text" class="form-control" name="Roll_No" value="<%= Roll_No %>" />
+                    </div>
+                    <div class="form-group">
+                        <label>Course_id:</label>
+                        <input type="text" class="form-control" name="Course_id" value="<%= Course_id %>" />
+                    </div>
+
+                    <button class="save btn btn-large btn-info">Save</button>
+                    <a href="#student/index" class="btn btn-large btn-default">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </script>
+
+<!-- the index container -->
+<script type="text/template" id="indexTemplate">
+
+    <a style="margin:10px 0px;" class="btn btn-large btn-info" href="#student/new"> Add New Student</a>
+    <a style="margin:10px 0px;" class="btn btn-large btn-info" href="#courseAgStudent/new"> Add Course Against Student</a>
+
+    <div class="collapse1" id="collapseExample2">
+
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(students, function (student) { %>
+            <tr>
+                <td><%= student.Roll_No %></td>
+                <td><%= student.Name %></td>
+                <td><%= student.Email %></td>
+                <% if (typeof(student.Course_id) === "undefined") { %>
+                <td>
+                    <a class="btn btn-xs btn-info" href="#student/<%= student.Roll_No %>/edit"> Edit</a>
+                    <a class="btn btn-xs btn-danger" href="#student/<%= student.Roll_No %>/delete"> Delete</a>
+                    <a class="btn btn-xs btn-info" href="#student/<%= student.Roll_No %>/showCourses">ShowCourses</a>
+                    <!-- 1 ShowCourses Buttton
+                      -->
+                </td>
+                <% } %>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+</script>
+
+<!--Separation-->
+
+
+<!--Course Add, Edit Template -->
+<script type="text/jst" id="CourseformTemplate">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger fade in" style="display:none;"></div>
+                <form>
+
+                    <div class="form-group">
+                        <label>Course_ID:</label>
+                        <input type="text" class="form-control" name="Course_id" value="<%= Course_id %>"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Course Name:</label>
+                        <input type="text" class="form-control" name="Course_name" value="<%= Course_name %>" />
+                    </div>
+
+                    <button class="save btn btn-large btn-info">Save</button>
+                    <a href="#course/index" class="btn btn-large btn-default">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </script>
+
+<!-- the index container -->
+<script type="text/template" id="CourseindexTemplate">
+
+    <a style="margin:10px 0px;" class="btn btn-large btn-info" href="#course/new"> Add New Course</a>
+    <a style="margin:10px 0px;" class="btn btn-large btn-info" href="#courseAgStudent/new"> Add Student Against Course</a>
+
+
+    <!-- <a class="btn btn-large btn-success" href="#crud/index"> View Person Details</a>
+-->
+    <div class="collapse1" id="collapseExample">
+
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(courses, function (course) { %>
+            <tr>
+
+                <td><%= course.Course_id %></td>
+                <td><%= course.Course_name %></td>
+                <% if (typeof(course.Roll_No) === "undefined") { %>
+                <td>
+                    <a class="btn btn-xs btn-info" href="#course/<%= course.Course_id %>/edit"> Edit</a>
+                    <a class="btn btn-xs btn-danger" href="#course/<%= course.Course_id %>/delete"> Delete</a>
+                    <a class="btn btn-xs btn-info" href="#course/<%= course.Course_id %>/showStudents"> showStudents</a>  </td>
+
+                <% } %>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+</script>
+
+<!--Separation-->
+<script src="jquery-2.1.4.min.js"></script>
+<script src="underscore-min.js"></script>
+<script src="backbone-min.js"></script>
+<script src="js/routers/routers.js"></script>
+<script src="js/models/Student.js"></script>
+<script src="js/models/Course.js"></script>
+<script src="js/models/StudentCourse.js"></script>
+<script src="js/collections/Students.js"></script>
+<script src="js/collections/Courses.js"></script>
+<script src="js/collections/StudentsCourses.js"></script>
+<script src="js/views/Main.js"></script>
+<script src="js/views/CourseMain.js"></script>
+<script src="js/views/StudentCourseMain.js"></script>
+<script src="js/views/AddStudent.js"></script>
+<script src="js/views/AddCourse.js"></script>
+<script src="js/views/EditStudent.js"></script>
+<script src="js/views/EditCourse.js"></script>
+<script src="js/views/AddCourseAgStd.js"></script>
+<script>
+    var app = new APP.crudRouter();
+</script>
+
+</body>
+</html>
